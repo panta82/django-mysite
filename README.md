@@ -1,3 +1,4 @@
-# Django Web Development with Python
+# Django MySite
 
-Following https://www.youtube.com/watch?v=yD0_1DPmfKM
+Following "Web Development with Python"
+https://www.youtube.com/watch?v=yD0_1DPmfKM
