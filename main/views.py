@@ -1,6 +1,10 @@
-from django.http import HttpResponse, HttpRequest
+from django.http import HttpRequest
 from django.shortcuts import render
+
+from main.models import Tutorial
 
 
 def homepage(request: HttpRequest):
-	return HttpResponse("Test")
+	return render(request, 'main/home.html', {
+		'tutorials': Tutorial.objects.all()
+	})
