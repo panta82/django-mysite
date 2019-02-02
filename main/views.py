@@ -1,10 +1,17 @@
 from django.http import HttpRequest
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
 
+from main.forms import NewUserForm
 from main.models import Tutorial
+
+
+def handle_form_errors(request, form):
+	for key in form.errors:
+		for err in form.errors[key]:
+			messages.error(request, f'{key}: {err}' if key != '__all__' else err)
 
 
 def homepage(request: HttpRequest):
@@ -15,18 +22,17 @@ def homepage(request: HttpRequest):
 
 def register(request: HttpRequest):
 	if request.method == 'POST':
-		form = UserCreationForm(data=request.POST)
+		form = NewUserForm(data=request.POST)
 		if form.is_valid():
 			user = form.save()
 			username = form.cleaned_data.get('username')
 			messages.success(request, f'New account created: {username}')
 			login(request, user)
 			return redirect('main:homepage')
-		else:
-			for msg in form.errors:
-				messages.error(request, f'{msg}: {form.errors[msg]}')
 
-	form = UserCreationForm
+		handle_form_errors(request, form)
+
+	form = NewUserForm
 	return render(request, 'main/register.html', {"form": form})
 
 
@@ -45,9 +51,7 @@ def login_request(request: HttpRequest):
 			messages.info(request, f'Welcome back, {user.username}!')
 			return redirect('main:homepage')
 
-		for key in form.errors:
-			for err in form.errors[key]:
-				messages.error(request, f'{key}: {err}' if key != '__all__' else err)
+		handle_form_errors(request, form)
 
 	form = AuthenticationForm()
 	return render(request, 'main/login.html', {'form': form})
