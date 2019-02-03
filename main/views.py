@@ -21,7 +21,7 @@ def category_or_tutorial(request: HttpRequest, slug):
 
 	tutorial = Tutorial.objects.filter(tutorial_slug=slug).first()
 	if tutorial is not None:
-		return HttpResponse('Slug is tutorial')
+		return serve_tutorial(request, tutorial)
 
 	return HttpResponse('Slug not found')
 
@@ -36,6 +36,16 @@ def serve_category(request: HttpRequest, category: TutorialCategory):
 	return render(request, 'main/category.html', {
 		'data': data,
 		'category': category
+	})
+
+
+def serve_tutorial(request: HttpRequest, tutorial: Tutorial):
+	siblings = Tutorial.objects\
+		.filter(tutorial_series=tutorial.tutorial_series)\
+		.order_by('tutorial_published')
+	return render(request, 'main/tutorial.html', {
+		'tutorial': tutorial,
+		'siblings': siblings
 	})
 
 

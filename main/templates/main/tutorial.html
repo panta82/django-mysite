@@ -1,0 +1,45 @@
+{% extends 'main/layout.html' %}
+
+{% block content %}
+	<div class="container">
+		<div class="row">
+
+			<div class="col s12 m8 l8">
+				<h3>{{ tutorial.tutorial_title }}</h3>
+				<p style="font-size: 70%">Published {{ tutorial.tutorial_published }}</p>
+				{{ tutorial.tutorial_content|safe }}
+			</div>
+
+			<div class="col s12 m4 l4">
+				<ul class="collapsible popout">
+					{% for sibling in siblings %}
+						{% if sibling == tutorial %}
+							<li class="active">
+								<div class="collapsible-header">
+									{{ sibling.tutorial_title }} (currently viewing)
+								</div>
+							</li>
+						{% else %}
+							<li>
+								<div class="collapsible-header">{{ sibling.tutorial_title }}</div>
+								<div class="collapsible-body">
+									<a href="/{{ sibling.tutorial_slug }}" class="btn waves-effect waves-light">Go</a>
+								</div>
+							</li>
+						{% endif %}
+					{% endfor %}
+				</ul>
+			</div>
+
+		</div>
+	</div>
+{% endblock %}
+
+{% block bottom %}
+	<script>
+		var elem = document.querySelector('.collapsible');
+		M.Collapsible.init(elem, {
+			accordion: true
+		});
+	</script>
+{% endblock %}
