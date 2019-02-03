@@ -29,6 +29,8 @@ class Command(BaseCommand):
 		for i in range(count):
 			category = TutorialCategory()
 			category.tutorial_category = self.fake.job()
+			category.category_summary = self.fake.text(max_nb_chars=200)
+			category.category_slug = '-'.join(self.fake.words(nb=random.randint(2, 7)))
 			category.save()
 			results.append(category)
 			self.stdout.write(self.style.NOTICE(f'   Category: {category.tutorial_category}'))
